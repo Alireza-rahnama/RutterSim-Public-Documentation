@@ -1,0 +1,34 @@
+﻿syntax = "proto3";
+
+//import "google/protobuf/empty.proto";
+
+// import "SeaScanMessageTypes.proto";
+//import "SeaviewNodeMessageTypes.proto";
+//import "InternalDataMessageTypes.proto";
+import "DataMessageTypes.proto";
+import "GrpcMessageTypes.proto";
+
+option java_package = "Rutter.Adapter.GRPC";
+
+package S6Protocol;
+
+
+
+// The service definition for the gRPC connection
+service SeaViewService {
+	//Unary Calls
+	rpc ShakeHands(HandshakeMessage) returns (HandshakeResponse);
+	rpc DisconnectClient(DisconnectClientMessage) returns (DisconnectClientResponse);
+
+	//Host to Client Streams
+//    rpc OpenNormalTracksStream(OpenEntityStreamMessage) returns (stream EntityEventMessage);
+//	rpc OpenOsdStream(OpenEntityStreamMessage) returns (stream OSDMessage);
+//	rpc OpenAisStream(OpenAisStreamMessage) returns (stream AisToSeaviewMessage);
+//    rpc OpenPngImageStream(OpenImageStreamMessage) returns (stream PngImageMessage);
+//	rpc OpenWamosStream(OpenWamosStreamMessage) returns (stream WamosToSeaViewContainerMessage);
+//
+//	// Bi-directional Streams
+//	rpc OpenCommandMessageStream(stream FromSeaViewContainerMessage) returns (stream ToSeaViewContainerMessage);
+//	rpc OpenRadarControlMessageStream(stream FromSeaViewContainerMessage) returns (stream ToSeaViewContainerMessage);
+	
+}

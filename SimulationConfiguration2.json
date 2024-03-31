@@ -1,0 +1,72 @@
+[
+  {
+    "simulationPeriod": 120,
+    "simulationId": "b0c307a3-85f7-4d04-8cd0-3a344fee6f5b",
+    "radarQuantityMap": {
+      "RadarStation [uniqeId=b5c5f022-48e5-41a5-a6d7-7fcc5e9e4634, type=RadarStation [uniqeId=cda224b6-4a40-456b-b8a6-02d1934f375b, type=RadarStation [uniqeId=27a7b44c-f7de-4abd-bbe7-bd2c2e1ea218, type=RadarStation [uniqeId=1f4de05b-59f5-4e02-b33d-54bcd660dfe9, type=RadarStation [uniqeId=e6713611-f084-40a5-8402-6f488222ef5d, type=RadarStation [uniqeId=7feefc51-72c2-41fa-9b8d-440609284b95, type=RadarStation [uniqeId=fd50e19f-bfd1-439a-8453-5c25ee2407bc, type=Sea Scan, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 1
+    },
+    "consumerQuantityMap": {
+      "ConsumerClient [id=784232ef-3918-4eb6-835d-727cfa872b61, type=ConsumerClient [id=a42cfd19-99c7-4b10-a47f-5291d03c9305, type=ConsumerClient [id=3a0737f6-26e7-461d-b717-4e27dbd5bc29, type=ConsumerClient [id=7c6e9b13-d9c9-44c7-9b40-274ed0653095, type=ConsumerClient [id=c2afd1c1-b7fa-49ed-9e47-45d7d2465635, type=ConsumerClient [id=16edef42-8d00-4401-8163-20fe40d54ba2, type=ConsumerClient [id=d599cc87-b156-493e-b8bf-36afe41d5c2e, type=Sea View]]]]]]]": 2
+    },
+    "name": "sim1"
+  },
+  {
+    "simulationPeriod": 10,
+    "simulationId": "922b46ef-921b-4a84-940c-ad00c267c7b6",
+    "radarQuantityMap": {
+      "RadarStation [uniqeId=42b0f0fd-9a40-4597-81c6-1254a9d589ab, type=RadarStation [uniqeId=7e5db404-9e32-4064-aa53-94d033875e79, type=RadarStation [uniqeId=d6a5a46e-0516-4596-adcd-541e92b431b5, type=RadarStation [uniqeId=d24c0532-6f31-47d7-9dd0-392714ac1069, type=RadarStation [uniqeId=e7fee076-3ae6-4cf3-b073-321f59ee86b4, type=RadarStation [uniqeId=3eadf92b-566e-48a5-8925-08db2127ffb7, type=Radar Type A, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 2
+    },
+    "consumerQuantityMap": {
+      "ConsumerClient [id=27daef74-12d6-451c-a1bc-12bfb984ea44, type=ConsumerClient [id=b828fe9d-4bfb-48ba-9651-1157c95fd393, type=ConsumerClient [id=01b30bb2-b278-4a01-bb39-2df887bdc07f, type=ConsumerClient [id=61bcb34b-7bce-46ad-b9c0-d93855d6c413, type=ConsumerClient [id=5a29e572-bf18-4a52-bf87-f74d3d176772, type=ConsumerClient [id=1cae960e-4568-46dc-9ad7-c3e7eb9ae5a2, type=Sea View]]]]]]": 5
+    },
+    "name": "sim2"
+  },
+  {
+    "simulationPeriod": 120,
+    "simulationId": "092aeecf-f0a4-4044-966f-8768cb35d431",
+    "radarQuantityMap": {
+      "RadarStation [uniqeId=762f036f-58d0-47d1-ac41-31f88aa0381b, type=RadarStation [uniqeId=f45429b8-edf2-4da3-aae1-96d684c3bceb, type=RadarStation [uniqeId=54b3eb1a-e168-49b0-9a3c-7460af101b85, type=RadarStation [uniqeId=81ab5018-b818-4ff4-8f10-04e7fd71207f, type=RadarStation [uniqeId=543c42cb-a88f-4474-91fa-29837c64d021, type=Radar Type B, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 3
+    },
+    "consumerQuantityMap": {
+      "ConsumerClient [id=33bc9f89-4674-4461-900b-3cdb9d8274c8, type=ConsumerClient [id=4e1fdeff-b31f-438d-bd23-cf406c85e7b2, type=ConsumerClient [id=4860f461-f2f2-4878-9900-585a16b42ee6, type=ConsumerClient [id=cd952578-7f76-4eb8-b09e-5a4767423529, type=ConsumerClient [id=1d74639c-dc07-40a2-a1f2-c16293182864, type=Sea View]]]]]": 10
+    },
+    "name": "sim3"
+  },
+  {
+    "simulationPeriod": 200,
+    "simulationId": "c29a2c7e-aa94-4210-aed6-ef0c13ab6944",
+    "radarQuantityMap": {
+      "RadarStation [uniqeId=3f260d89-7a80-438f-98ae-fea906a61a51, type=RadarStation [uniqeId=b56f5bd7-0b0b-42e8-93ce-75497dc93ece, type=RadarStation [uniqeId=6130c882-60aa-489e-85f5-b325edbdeaee, type=Sea Scan, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 4,
+      "RadarStation [uniqeId=7e8bb600-692a-43a2-8b39-5e77424d20f7, type=RadarStation [uniqeId=39435338-3608-4797-8893-59fcf7a61604, type=RadarStation [uniqeId=3710335b-1d6e-4c05-adf3-a22ed0dbd1fd, type=Sea Scan, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 4,
+      "RadarStation [uniqeId=50272492-a021-481a-99a4-96da214f4979, type=RadarStation [uniqeId=a783978b-defb-4be2-a39d-19c7316417eb, type=RadarStation [uniqeId=9bbb8e0b-8e84-4846-b921-45f0b5e07082, type=Radar Type D, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 2,
+      "RadarStation [uniqeId=dd64905a-05a5-4657-ae2c-799847a0bf8a, type=RadarStation [uniqeId=2ffb4336-d927-4c24-836f-062f2e41a1ee, type=RadarStation [uniqeId=206f9c19-1c4c-49ee-aa76-b69c1e1dacfc, type=Radar Type D, dataTransmitionInterval=0], dataTransmitionInterval=0], dataTransmitionInterval=0]": 2
+    },
+    "consumerQuantityMap": {
+      "ConsumerClient [id=c10701f0-5653-4367-bbab-e09bc13deda1, type=ConsumerClient [id=f35aec5e-afcd-462b-afa9-a357e77ae6ef, type=ConsumerClient [id=78c69f22-9cd0-4d7d-b11b-7d98d045da6c, type=Sea View]]]": 12,
+      "ConsumerClient [id=84935516-5383-42c9-b782-6fa2baa80298, type=ConsumerClient [id=a48c5f1c-25e6-42de-809f-df9d668a059f, type=ConsumerClient [id=ada6442f-9fb0-4797-9c68-cf7fdf601ceb, type=Sea View]]]": 12
+    },
+    "name": "Sim4"
+  },
+  {
+    "simulationPeriod": 2000,
+    "simulationId": "92ee3769-593d-4ff4-8afb-2af97b67e1ec",
+    "radarQuantityMap": {
+      "RadarStation [uniqeId=15992cbf-ed78-4e7c-be3d-720751f67c4d, type=RadarStation [uniqeId=501ce9d5-fbb6-43ea-a7ed-7b4cc5ec54d8, type=Type F, dataTransmitionInterval=0], dataTransmitionInterval=0]": 10
+    },
+    "consumerQuantityMap": {
+      "ConsumerClient [id=16d2cb4a-17b8-4a7a-a075-ff33776c4de4, type=ConsumerClient [id=87187b75-cf99-44a9-8ce8-99e2cf78a641, type=Desktop App]]": 20
+    },
+    "name": "Mission Possible"
+  },
+  {
+    "simulationPeriod": 10000000,
+    "simulationId": "1de174fd-95a0-4277-983e-8991a4c891b2",
+    "radarQuantityMap": {
+      "RadarStation [uniqeId=cb2bfe6e-6949-4232-8e3e-e184f4215ce3, type=Sea Scan, dataTransmitionInterval=0]": 1000
+    },
+    "consumerQuantityMap": {
+      "ConsumerClient [id=cf9b40c9-40e8-4d0b-8b09-754a327c7677, type=Sea View]": 5000
+    },
+    "name": "Mission Impossible"
+  }
+]

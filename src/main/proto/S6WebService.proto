@@ -1,0 +1,65 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+// import "SeaScanMessageTypes.proto";
+// import "SeaviewNodeMessageTypes.proto";
+import "DataMessageTypes.proto";
+import "GrpcMessageTypes.proto";
+
+option java_package = "com.Adapter.RUTTER_GRPC";
+
+package S6Protocol;
+
+
+message ConnectionDetailsMessage
+{
+	string Username = 1;
+	string ClientGuid = 2;
+}
+
+message CurrentConnectionsMessage
+{
+	repeated ConnectionDetailsMessage Connections = 1;
+}
+
+message ProductKeyUpdateMessage
+{
+	string productKey = 1;
+}
+
+
+message ProductKeyUpdateResultMessage
+{
+	bool Success = 1;
+	string ErrorMessage = 2;
+}
+
+
+message MapBoundsMessage
+{
+	CoordinantMessage SouthWest = 1;
+	CoordinantMessage NorthEast = 2;
+}
+
+
+// The service definition for the gRPC connection
+service S6WebService {
+	//Unary Calls
+	rpc ShakeHands(HandshakeMessage) returns (HandshakeResponse);
+	rpc DisconnectClient(DisconnectClientMessage) returns (DisconnectClientResponse);
+
+	rpc GetCurrentConnections(google.protobuf.Empty) returns (CurrentConnectionsMessage);
+	rpc ForceUserToDisconnect(ConnectionDetailsMessage) returns (google.protobuf.Empty);
+	rpc UpdateS6NodeProductKey(ProductKeyUpdateMessage) returns (ProductKeyUpdateResultMessage);
+	rpc UpdateMapBounds(MapBoundsMessage) returns (google.protobuf.Empty);
+	//Host to Client Streams
+
+	rpc OpenPngImageStream(OpenImageStreamMessage) returns (stream PngImageMessage);
+	rpc OpenAisStream(OpenAisStreamMessage) returns (stream AisToSeaviewMessage);
+	
+	rpc OpenNormalTracksStream(OpenEntityStreamMessage) returns (stream EntityEventMessage);
+	rpc OpenOsdStream(OpenEntityStreamMessage) returns (stream OSDMessage);
+	
+	rpc OpenWamosStream(OpenWamosStreamMessage) returns (stream WamosToSeaViewContainerMessage);
+}

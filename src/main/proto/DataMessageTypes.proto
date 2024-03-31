@@ -1,0 +1,856 @@
+
+///
+/// RadarSourceMessageTypes.proto defines the protocol buffers for each of the objects being sent and received from
+/// the components of the system. For us old-timers at Rutter, this is gRPC version of IDLTYPES.H
+///
+
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+option java_package = "com.Adapter.RUTTER_GRPC";
+package S6Protocol; //C++ namespace
+
+
+
+enum ImageState
+{
+    Ok = 0;             // Normal
+    Transition = 140;   // Transition from one processing set to another
+    Charging = 141;     // Scan averaging charging
+    Override = 142;     // Unused at this time
+    OptionsError = 143;  // desired processing options are not compatible with
+}
+
+
+
+message CoordinantMessage
+{
+    double Latitude = 1;
+    double Longitude = 2;
+}
+
+message PointMessage
+{
+    int32 X = 1;
+    int32 Y = 2;
+}
+
+message SizeMessage
+{
+    int32 Height = 1;
+    int32 Width = 2;
+}
+
+
+enum S6ImageType
+{
+    S6BScanDisplayImage = 0;
+    S6ScanConvertedDisplayImage = 1;
+    S6BScanWaveVisionDisplayImage = 2;
+    S6ScanConvertedWaveVisionDisplayImage = 3;
+    S6ScanConvertedPlotImage = 4;
+}
+
+
+
+
+enum PexType
+{
+    Normal = 0;
+    Oil = 1;
+    Iceberg = 2;
+    OpenWaterLead = 3;
+    Ridge = 4;
+    IceField = 5;
+    None = 6;
+}
+
+
+message WamosAlarmMessage
+{
+	google.protobuf.Timestamp timeStamp = 1;
+    string alarmTitle = 2;
+    string alarmMessage = 3;
+	int32 RadarNumber = 4;
+	int32 AlarmID = 5;
+    double Latitude = 6;
+    double Longitude = 7;
+}
+
+
+
+message S6ImageHeaderMessage
+{
+    int32 BitsPerPixel = 1;
+    int32 MaxSampleValue = 2;
+    uint32 BytesPerPixel = 3;
+    bool Valid = 4;
+    double Range = 5;
+    google.protobuf.Timestamp SeaScanTime = 6;
+    CoordinantMessage Position = 7;
+    google.protobuf.Timestamp GPSTimeStamp = 8;
+    double Heading = 9;
+    double SpeedFromGPS = 10; //in meters per second
+    double CourseFromGPS = 11;
+    double SpeedFromLOG = 12; //in meters per second
+    double CourseFromLOG = 13;
+    double SpeedFromMAN = 14; //in meters per second
+    double CourseFromMAN = 15;
+    uint32 Lines = 16;
+    uint32 SamplesPerLine = 17;
+    bool SingleQuadrant = 18;
+    uint32 QuadrantNumber = 19;
+    bool ScanConverted = 20;
+    double StartBearing = 21;
+    float AngleCoverage = 22;
+    uint32 StartRange = 23;
+    uint32 RangeCoverage = 24;
+    PointMessage Origin = 25;
+    int32 PRF = 26;
+    int32 AntennaSpeed = 27;
+    bool NorthAligned = 28;
+    float RangePerSample = 29;
+    uint32 SelectedModeNdx = 30;
+    uint32 ModeNdx = 31;
+    uint32 PulseLength = 32;
+    bool CFARed = 33;
+    bool PulseFiltered = 34;
+    bool MotionCompensated = 35;
+    uint32 ScansAveraged = 36;
+    int32 DebloomState = 37;
+    bool ScanAverageSafeMode = 38;
+    uint32 State = 39;
+    ImageState ImageState = 40;
+    SizeMessage RadarImageSize = 41;
+    google.protobuf.Timestamp CudaImageOutputPCTimeStamp = 42;
+}
+
+
+
+message CPAMessage {
+	float mCPA = 1;			///< closest point of approach in meters
+	float minTCPA = 2;		///< time to closest point of approach in minutes
+	float Range = 3;
+	float Bearing = 4;
+}
+
+
+
+
+message TargetHeaderMessage {
+    S6ImageHeaderMessage DataHeader = 1;
+	uint32 DataThreshold = 2;
+    uint32 NumTargets = 3;
+    bool Masked = 4;
+    bool ClutterMapUsed = 5;
+	uint32 MaskMode = 6;
+    int32 CfarOffset = 7; 
+	int32 AntennaVerticalBeamwidth = 8;	///< Multiplied by a factor of 1000 to convert double to int
+	int32 TransceiverPower = 9; 	///< in Watts
+    PexType pexType = 10;
+}
+
+
+message PngImageMessage
+{
+    S6ImageHeaderMessage header = 1;
+    bytes pngData = 2;
+    int32 type = 3;
+    string seascanSourceId = 4;
+    string seascanSourceName = 5;
+}
+
+
+
+message WamosSettingsMessage
+{
+    repeated double dWaterdepth = 1;// [0] location's depth of water in meter 
+							     // [i] i = 1,...,9 waterdepth of cartesian boxes 0,...,8!!
+
+	// Cartesian Transformation parameters
+	int32 iNumboxes = 2;             // Number of pre-FFT boxes
+	int32 iXl = 3;					 // size cartesian box in meters
+	int32 iYl = 4;					 // size cartesian box in meters
+	int32 iR_box = 5;                // distance to box in meters
+    repeated int32 iP_box = 6;     // geographical angle to box in degrees
+
+	// Antenna Settings
+    int32 iDeadrange = 7;            // deadrange in m
+	int32 iAntennaHeight = 8;		 // in meter
+	int32 iWamosRange = 9;           // range used in WinWaMoS in m      
+	double dWaterDepthOffset = 10;	 // in meter
+
+	// Processing Parameters
+	int32 iAveragingSpace = 11;	// Used to determine if calcwave is deleivering results for individual boxes or a spatial average
+	int32 iAveragingTime = 12;
+
+	// Hrc - Parameter
+	int32 iHrcCalc = 13;
+	int32 iHrcAnaBoxSize = 14;
+	int32 iHrcAnaOffset = 15;
+	bool bHrcRadaroutput = 16;
+	bool bHrcDelCpo = 17;
+	bool bHrcDepthFit = 18;
+	int32 iHrcUsedImages = 19;
+	bool bHrcBearingOnOff = 20;
+	int32 iHrcOrientation = 21;
+	int32 iHrcAngle = 22;
+	double dHrcCutoff = 23;
+	double dHrcMaxCurrent = 24;
+	double dHrcMaxWaterDepth = 25;
+	int32 iHrcObsPtRange = 26;
+	int32 iHrcObsPtDir = 27;
+	double dHrcMinFreq = 28;
+	int32 iHrcHrcAlp1 = 29;
+	int32 iHrcHrcAlp2 = 30;
+
+	int32 RadarChannel = 31;
+	int32 iAnalysisInterval = 32;		// expected time between 2 sea state analysis (in seconds)
+	int32 iHrcAnalysisInterval = 33;	// expected time between 2 HRC analysis (in seconds)
+	int32 iCart = 34;
+	double dExpectedRPT = 35;
+    bool FromSeaView = 36;
+}
+ 
+
+
+
+message StructD2HeaderMessage
+{
+    double dRpt = 1;        // antenna revolution time in seconds 
+    string strDatum = 2;	// date 
+    string strZeit = 3;	    // time 
+	int32 iTimeZone = 4;	// ME 291003: Timezone, e.g. GMT + 1 for Germany
+    string strLatitude = 5; // position latitude 
+    string strLongitude = 6;// position longitude 
+    string strRigname = 7;  // location name 
+    string strRigtype = 8;   // SHIP or TOWER 
+    string strRigid = 9;  // location short identifier 
+
+    string strUserText = 10;    // user text
+	int32 iIsPlaybackData = 11;				// 0: live data, 1: playback data
+
+	double dWaterdepth = 12;              // Water depth 4 Feb 2000 
+	int32 iValidFlagWaterdepth = 13;
+
+    double dShipGroundcourse = 14;		// actual ship's ground track direction 
+    int32 iValidFlagShipGroundcourse = 15;
+
+	double dShipSpeedOverGround = 16;     // actual ship's speed in kn
+	int32 iValidFlagShipSpeedOverGround = 17;
+
+	double dLongspeedThroughWater = 18;			// actual ship's long speed in m/s
+	int32 iValidFlagLongspeedThroughWater = 19;
+
+	double dTransspeedThroughWater = 20;			// actual ship's trans speed in m/s
+	int32 iValidFlagTransspeedThroughWater = 21;
+
+    double dCompass = 22;       // actual ship compass
+	int32 iBow2Radar = 23;
+	int32 iPictureHeading = 24;
+	int32 iCompOffset = 25;	   // Offset wird dCompass in GetRotationAngleToNorth hinzugef�gt.
+						   // Variable wird zus�tzlich in den Pol - Header geschrieben
+    double dWindspeed = 26;     // actual wind's speed in m/s
+	int32 iValidFlagWindspeed = 27;
+
+    double dWinddirection = 28;			// actual wind's direction
+	int32 iValidFlagWinddirection = 29;
+
+
+	string strKindOfWind = 30;	// "T" or "R"
+
+
+	int32   iWindSensorHeight = 31;	// Wind Sensor Height in m
+
+    double dSpeedThroughWater = 32;     // actual Speed Through Water in m/s
+	int32 iValidFlagSpeedThroughWater = 33;
+
+	int32 iValidFlagDateTime = 34;
+	int32 iValidFlagHeading = 35;
+	int32 iValidFlagPosition = 36;
+
+    double dNorth = 37;         // North up rotation of resulted spectra in degree 
+    double dCurrd = 38;         // drift direction (fitted from 3d spec.) [rad] 
+	double dCurrs = 39;         // drift speed [m/sec] 
+	double dSOG = 40;		   // Ship speed over ground from GPS [m/s] 
+	double dCOG = 41;           // Ship direction over ground [deg] 
+	double dSTW = 42;		   // calculated ship speed through water [m/sec]
+	double dCTW = 43;           // calculated ship direction through water relativ to north [deg]
+	double dXhs = 44;           // Value of Significant wave Heigth [m] 
+    double dXhs1 = 45;          // 1st Peak Significant wave Heigth [m] 
+    double dXhs2 = 46;          // 2nd Peak Significant wave Heigth [m] 
+    double dDomga = 47;         // Delta Omega 4 Feb 2000 
+    double dDeltak = 48;        // spectral resolution 
+    double dTp = 49;            // [s] Peak period    + (1d) 
+    double dTp1 = 50;           // Value peak period (1. maximum) from E(f) spectrum 
+    double dTp2 = 51;           // Value peak period (2. maximum) from E(f) spectrum 
+    double dDp1 = 52;           // 1st Peak Direction 
+    double dDp2 = 53;           // 2nd Peak Direction 
+    double dMdir = 54;          // Mean Direction, coming from 
+    double dTpe1 = 55;          // First Estimation of Peak Period 
+    double dLp = 56;            // Wave length (Peak Period) 
+    double dLp1 = 57;           // Peak wave length (1. maximum) from E(f) spectrum 
+    double dLp2 = 58;           // Peak wave length (2. maximum) from E(f) spectrum
+    int32  iNspec = 59;          // number of spectra in D2MEAN 
+    int32   iMf = 60;             // number of frequencies in FT-Spectrum 
+    int32   iMth = 61;            // number of directions in FT-Spectrum 
+	double dPdir = 62;          // Peak Direction, coming from 
+    double dTm2 = 63;           // Mean Period (Spectr. est. of Tzup) 
+    double dHsmax = 64;         // Max value of Hs when averaging 
+	double dFrequResol = 65;	   // Frequency Resolution (DFRE)
+
+	// new in WinWamoS
+	int32		iQualityIndex = 66;
+
+	double	dHsSwell = 67;
+	double	dTpSwell1 = 68;
+	double	dDpSwell1 = 69;
+	double	dLpSwell1 = 70;
+	double	dHsSwell2 = 71;
+	double	dTpSwell2 = 72;
+	double	dDpSwell2 = 73;
+	double	dLpSwell2 = 74;
+	double	dHsSwell3 = 75;
+	double	dTpSwell3 = 76;
+	double	dDpSwell3 = 77;
+	double	dLpSwell3 = 78;
+
+	double	dHsSea = 79;
+	double	dTpSea1 = 80;
+	double	dDpSea1 = 81;
+	double	dLpSea1 = 82;
+	int32 iAveragingTime = 83;	// ME 250503 Averaging time in minutes
+
+	int32 iNkx = 84;	// Number of spectral pixel in Kx of d2s
+	int32 iNky = 85;	// Number of spectral pixel in Ky of d2s
+
+	int32 iIQ = 86;
+	int32 iIQU = 87;
+}
+
+
+
+
+message WaveBoxDataMessage
+{
+	google.protobuf.Timestamp TimeStamp = 1;
+	double CurrentSpeed = 2;
+	double CurrentDirection = 3;
+	double WaveHeight = 4;
+	double PeakWaveLength = 5;
+	double PeakWavePeriod = 6;
+	double PeakWaveDirection = 7; 
+	double HsMax = 8;
+	double STW = 9;
+	double SOG = 10;
+	int64 Hash = 11;
+}
+
+
+message WamosHistoricalDataMessage
+{
+	int32 RadarChannel = 1;
+	int32 WaveBoxNumber = 2;
+    int32 NumberOfDataPoints = 3;
+	repeated WaveBoxDataMessage WamosHistoricalDataPoint = 4;
+}
+
+
+
+message WamosHrcResultsMessage
+{
+	repeated double CurrentSpeed = 1; //[MAX_HRC_CURRENT_SPEED_SIZE];
+	repeated double CurrentDirection = 2; //[MAX_HRC_CURRENT_DIRECTION_SIZE];
+	repeated double Depth = 3; //[MAX_HRC_DEPTH_SIZE];
+    bytes Date = 4;
+    bytes Time = 5;
+    double dDx = 6;
+    int32 iFifo = 7;
+    int32 iDnxy = 8;
+    int32 iXsta = 9;
+	int32 iN_x = 10;
+	double dNorth = 11;
+	int32 RadarChannel = 12;
+	bool PlayBackActive = 13;
+	float Latitude = 14;
+	float Longitude = 15;
+	int32 iSdrng = 16;	
+}
+
+
+
+message WamosMessageFlagsMessage
+{
+	google.protobuf.Timestamp Time = 1;
+	int32 MessageFlags = 2;
+	int32 WaveBoxNumber  = 3;
+	int32 RadarChannel = 4;
+}
+
+
+message WamosCalcWaveResultsMessage
+{
+	int32 WaveBoxNumber = 1;
+	StructD2HeaderMessage header = 2;
+	repeated double EnergySpectrum = 3; //[MAX_NON_DIRECTION_FREQ_SPECTRUM_SIZE]
+	repeated double FTFrequencies = 4; //[MAX_DIRECTIONAL_FREQ_SPECT_FREQUENCIES]
+	repeated double FTAngles = 5; //[MAX_DIRECTIONAL_FREQ_SPECT_ANGLES]
+	repeated double FTData = 6; //[(MAX_DIRECTIONAL_FREQ_SPECT_FREQUENCIES * MAX_DIRECTIONAL_FREQ_SPECT_ANGLES)]
+	double MaxFTValue = 7;
+	int32 RadarChannel = 8;
+	int32 MessageFlags = 9;
+}
+
+
+message WamosSettingsContainerMessage {
+    repeated WamosSettingsMessage wamosSettingsMessage = 1;
+    repeated WamosCalcWaveResultsMessage wamosCalcWaveResultsMessage = 2;
+    repeated WamosMessageFlagsMessage wamosMessageFlagsMessage = 3;
+    repeated WamosHistoricalDataMessage wamosHistoricalDataMessage = 4;
+    repeated WamosHrcResultsMessage wamosHrcResultsMessage = 5;
+}
+
+
+
+message AisSentenceMessage
+{
+ 	int32 MessageType = 1;
+	int32 RepeatIndicator = 2;
+	int32 MMSI = 3;
+	string TalkerID = 4;
+	int32 SentenceID = 5;
+	int32 NumberOfSentences = 6;
+	int32 SequentialMessageID = 7;
+	int32 Channel = 8;	
+	int32 NavStatus = 9;
+	float RateOfTurn = 10;				// degrees per minute
+	float SpeedOverGround = 11;			// in 1/10 of a knot
+	int32 PositionAccuracy = 12;
+	double Longitude = 13;				// 28 bit 2's complement representation of 1/10000 of a minute
+	double Latitude = 14;				// same as Longitude, but 27 bits. Use GetSignedFromNBitUnsigned(unsigned long ulLong, int32 nBits) to convert
+	float CourseOverGround = 15;			// in 1/10 of a degree
+	int32 TrueHeading = 16;				// in degrees
+	int32 TimeStamp = 17;					// utc second
+	int32 ManeuverIndicator = 18;			//Inland AIS standard, ignore if set to 0
+	int32 Spare1 = 19;						// parse it anyway, throw in a zero...
+	int32 RAIMFlag = 20;
+	uint32 CommunicationState = 21;
+	int32 UTCYear = 22;
+	int32 UTCMonth = 23;
+	int32 UTCDay = 24;
+	int32 UTCHour = 25;
+	int32 UTCMinute = 26;
+	int32 UTCSecond = 27;
+	int32 TypeOfEPFD = 28;		
+	int32 LongRangeControl = 29;
+	int32 Spare2 = 30;	
+	int32 AISVersion = 31;
+	int32 IMONumber = 32;
+	string CallSign = 33;
+	string Name = 34;
+	int32 DimensionToBow = 35;		
+	int32 DimensionToStern = 36;
+	int32 DimensionToPort = 37;
+	int32 DimensionToStarboard = 38;
+	int32 ETAMonth = 39;
+	int32 ETADay = 40;
+	int32 ETAHour = 41;
+	int32 ETAMinute = 42;
+	float Draught = 43;	
+	string Destination = 44;
+	int32 DTE = 45;
+	int32 Spare3 = 46;					
+	int32 CSUnit = 47;
+	int32 DisplayFlag = 48;
+	int32 DSCFlag = 49;
+	int32 BandFlag = 50;
+	int32 Msg22Flag = 51;
+	int32 CommunicationStateSelectorFlag = 52;
+	int32 TypeOfShipAndCargo = 53;	
+	int32 AssignedModeFlag = 54;		
+	int32 AidType = 55;			
+	int32 OffPositionIndicator = 56;
+	int32 AToNStatus = 57;
+	int32 VirtualAToNFlag = 58;	
+	string NameExt = 59;
+	int32 PartNumber = 60;
+	string VendorID = 61;	
+}
+
+
+
+enum AisNavigationStatus
+{    
+    UnderWayEngine = 0;
+    AtAnchor = 1;
+    NotUnderCommand = 2;
+    RestrictedManoeuvrability = 3;
+    ConstrainedByDraught = 4;
+    Moored = 5;
+    Aground = 6;
+    EngagedInFishing = 7;
+    UnderWaySailing = 8;
+    HighSpeedCraft = 9;
+    WingInGround = 10;
+    Reserved = 11;
+    Default = 15;
+    InvalidNavigationStatus = 255;
+}
+
+enum AisPositionalAccuracy
+{
+    Low = 0;
+    High = 1;
+    InvalidPositionalAccuracy = 255;
+}
+
+enum AisShipType
+{
+    
+    NotAvailableOrNoShip = 0;
+    Unknown = 1;
+    WIGGeneric = 20;
+    WIGCatX = 21;
+    WIGCatY = 22;
+    WIGCatZ = 23;
+    WIGCatOS = 24;
+    WIGUnKnown = 29;
+    FishingVessel = 30;
+    TowingVessel = 31;
+    LongTowingVessel = 32;
+    DredgingVessel = 33;
+    DivingVessel = 34;
+    MilitaryVessel = 35;
+    SailingVessel = 36;
+    PleasureVessel = 37;
+    HSGGeneric = 40;
+    HSGCatX = 41;
+    HSGCatY = 42;
+    HSGCatZ = 43;
+    HSGCatOS = 44;
+    HSGUnKnown = 49;
+    PilotVessel = 50;
+    SearchAndRescue = 51;
+    Tug = 52;
+    PortTender = 53;
+    VesselWithAntiPollutionEquipment = 54;
+    LawEnforcement = 55;
+    MedicalTransport = 58;
+    PassengerShip = 60;
+    CargoShipGeneric = 70;
+    CargoShipCatX = 71;
+    CargoShipCatY = 72;
+    CargoShipCatZ = 73;
+    CargoShipCatOS = 74;
+    CargoShipUnKnown = 79;
+    TankerGeneric = 80;
+    TankerCatX = 81;
+    TankerCatY = 82;
+    TankerCatZ = 83;
+    TankerCatOS = 84;
+    TankerUnKnown = 89;
+    OtherGeneric = 90;
+    OtherCatX = 91;
+    OtherCatY = 92;
+    OtherCatZ = 93;
+    OtherCatOS = 94;
+    OtherUnKnown = 99;
+    InvalidShipType = 255;
+
+};
+
+enum AisPositionFixingDeviceType
+{
+    Undefined = 0; // (default)
+    GPS = 1;
+    GLONASS = 2;
+    Combined = 3; // GPS/GLONASS
+    LoranC = 4;
+    Chayka = 5;
+    IntegratedNavigationSystem = 6;
+    Surveyed = 7;
+    //8-15 = not used
+
+    InvalidPositionFixingDeviceType = 255;
+}
+
+
+enum AisTargetType
+{
+    OwnShip = 0;
+    BaseStation = 1;
+    AISTarget = 2;
+    AidToNavigation = 3;
+}
+
+message AisTargetMessage
+{
+    AisTargetType  AisTargetType  = 1;
+    string ShipName = 2;
+    string CallSign = 3;
+    string IMONumber = 4;
+    int32 MMSI = 5;
+    CoordinantMessage Position = 6;
+    string Destination = 7;
+    string DestinationETA = 8;
+    float SpeedOverGround = 9; //m/s
+    float CourseOverGround = 10; //compass deg
+    float Heading = 11; //compass deg
+    float RateOfTurn = 12; //compass deg per sec
+    float Draught = 13;//meters
+    float ShipLength = 14;
+    float ShipBreadth = 15;
+    AisShipType ShipType = 16;
+    AisNavigationStatus NavigationalStatus = 17;
+    AisPositionalAccuracy PositionalAccuracy = 18;
+    google.protobuf.Timestamp LastUpdate = 19;
+    AisPositionFixingDeviceType PositionFixingDeviceType = 20;
+    float DimensionA = 21; //meters
+    float DimensionB = 22; //meters
+    float DimensionC = 23; //meters
+    float DimensionD = 24; //meters
+    int32 AISVersion = 25;
+    bool UsingRAIM = 26;
+    uint32 CommState = 27;
+    bool DataTerminalReady = 28;
+    int32 TimeStampUTCSecond = 29;
+    int32 BlueSign = 30;
+    bool Lost = 31;
+    float Range = 32; //meters
+    float Bearing = 33; //compass deg
+    bool IsClassB = 34;
+    int32 PersonsOnBoard = 35;
+    bool OffPosition = 36;
+    int32 TypeOfAid = 37;
+    int32 AtoNFlag = 38;
+    int32 AssignedModeFlag = 39;
+}
+
+
+
+message AisToSeaviewMessage
+{
+    repeated AisSentenceMessage AisSentences = 1;
+	repeated AisTargetMessage AisTargets = 2;
+	repeated AISTrailMessage AISTrailPoints = 3;
+    string seascanSourceId = 4;
+    string seascanSourceName = 5;
+}
+
+message AISTrailMessage {
+	int32 MMSI = 1;
+	repeated AISTrailPoint trailPoints = 2;
+}
+
+message AISTrailPoint {
+	CoordinantMessage Position = 1;
+	google.protobuf.Timestamp TimeStamp = 2;
+}
+
+
+
+message AisCollectionMessage
+{
+    repeated AisSentenceMessage AisSentences = 1;
+	repeated AisTargetMessage AisTargets = 2;
+}
+
+
+
+message OutlineMessage  {
+    int32 OutlineId = 1;
+    repeated CoordinantMessage Coordinates = 2;
+    string TimeStamp = 3;
+    double Perimeter = 4;
+    double Area = 5; 
+    double Direction = 6;
+    double Speed = 7;
+    CoordinantMessage Centroid = 8;
+    bool isManual = 9;
+    string OutlineGuid = 10;
+    bool Lost = 11;
+}
+
+message OutlinesMessage {
+    repeated OutlineMessage Outlines = 1;
+    PexType OutlineType = 2;
+}
+
+
+
+message VolumePointMessage {
+    PointMessage Point = 1;
+    int32 ClassNumber = 2;
+}
+
+message VolumeOutlineMessage {
+    uint32 OutlineID = 1;
+    string OutlineGuid = 2;
+    repeated VolumePointMessage VolumePoints = 3;
+    int32 Class1VolumePixels = 4;
+    int32 Class2VolumePixels = 5;
+    int32 Class3VolumePixels = 6;
+    int32 Class4VolumePixels = 7;
+    int32 Class5VolumePixels = 8;
+    int32 Class6VolumePixels = 9;
+    int32 Class7VolumePixels = 10;
+    int32 Class8VolumePixels = 11;
+}
+
+message VolumeSettingsMessage {
+    double Class1Thickness = 1;
+    double Class2Thickness = 2;
+    double Class3Thickness = 3;
+    double Class4Thickness = 4;
+    double Class5Thickness = 5;
+    double Class6Thickness = 6;
+    double Class7Thickness = 7;
+    double Class8Thickness = 8;
+    string seascanSourceId = 9;
+    string seascanSourceName = 10;
+}
+
+message OilSpillThicknessPointClusterMessage {
+    repeated OilSpillThicknessPointMessage OilSpillThicknessPoints = 1;
+}
+
+message OilSpillThicknessPointMessage {
+    string Id = 1;
+    int32 OutlineId = 2;
+    double Latitude = 3;
+    double Longitude = 4;
+    double ThicknessEstimate = 5;
+}
+
+message OilSpillVolumeMessage {
+    string id = 1;
+    repeated VolumeOutlineMessage VolumeOutlines = 2;
+    bytes pngData = 3;
+    S6ImageHeaderMessage header = 4;
+}
+
+
+
+message WamosToSeaViewContainerMessage
+{
+	string seascanSourceId = 1;
+	oneof ContainedMessageTypes
+	{
+		WamosAlarmMessage alarmMessage = 2;
+		WamosCalcWaveResultsMessage calcwaveResultsMessage = 3;
+		WamosHrcResultsMessage hrcResultsMessage = 4;
+		WamosMessageFlagsMessage flagsMessage = 5;
+		WamosSettingsMessage settingsMessage = 6;
+		WamosHistoricalDataMessage historicalDataMessage = 7;
+	}
+    string seascanSourceName = 8;
+}
+
+message OSDMessage {
+	oneof OSDMessageTypes {
+		OsdTrackCollecionMessage trackCollection = 1;
+		OutlinesMessage outlines = 2;
+		TargetHeaderMessage header = 3;
+		OilSpillVolumeMessage volumeOutlines = 4;
+        OilSpillThicknessPointClusterMessage thicknessPoints = 5;
+        VolumeSettingsMessage volumeSettings = 6;
+	}
+    string seascanSourceId = 7;
+    string seascanSourceName = 8;
+}
+
+
+
+message EntityEventMessage
+{
+	LayerInfoMessage EntityInfo = 1;
+	string ServerId = 2;
+}
+
+
+ 
+message EntityMessage
+{
+	repeated float OutlineData = 1;
+	int32 Count = 2;
+	int32 Priority = 3;
+	string Name = 4;
+	string ID = 5; //GUID
+	double RefLat = 6;
+	double RefLon = 7;
+	string Source = 8; //GUID
+	bool IsVisible = 9;
+	bool IsSelected = 10;
+	google.protobuf.Timestamp TimeStamp = 11;
+}
+
+
+
+message PositionEntityMessage
+{
+	EntityMessage entitySubClass = 1;
+
+	enum PositionFixType
+	{
+		unknown = 0;
+		GPS = 1;
+		GNSS = 2;
+		GLONAS = 3;
+		DR = 4;
+		sounder = 5;
+		radar = 6;
+		celestial = 7;
+		visual = 8;
+	}
+	PositionFixType FixSource = 2;
+}
+
+
+message FixEntityMessage
+{
+	PositionEntityMessage positionSubClass = 1;
+	google.protobuf.Timestamp DTG = 2;
+}
+
+
+
+message TrackEntityMessage
+{
+	FixEntityMessage fixSubClass = 1; //Embedding messages in-leue of inheretance
+	float SOG = 2;				// from RefLat, RefLon - m
+	float COG = 3;				// from RefLat, RefLon - deg
+	uint32 status = 4;          ///< 0 to 255
+	int32 TargetID = 5;         ///< 0 to 255
+	int32 OriginatorID = 6;    ///< 0 to MAX_SAMPLE_VALUE
+	int32 ScansSinceLost = 7;    ///< 0 to MAX_SAMPLE_VALUE-1
+	uint32 UpdateStatus = 8;
+	float Range = 9;
+	float Bearing = 10;         ///< in m^2
+	repeated CPAMessage CPA = 11;             ///< range to center of intensity, in meters
+	int32 TrackType = 12;
+	int32 Area = 13;
+	float Latitude = 14;		///< in degrees (e.g. 45� 25" 15' N = 45.4208333)
+	float Longitude = 15;	///< in degrees
+	int32 TargetMinArea = 16;
+	int32 TargetActualMinArea = 17;
+}
+
+
+message OsdTrackCollecionMessage
+{
+    repeated TrackEntityMessage Tracks = 1;
+}
+
+
+message LayerInfoMessage
+{
+	repeated google.protobuf.Any entityInfoList = 1; //"Any" allows it to be any message type above
+	int32 Priority = 2;
+	string Name = 3;
+	string id = 4; //GUID
+	bool isVisible = 5;
+	int32 contentHint = 6;
+}
+

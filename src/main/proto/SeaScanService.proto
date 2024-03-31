@@ -1,0 +1,34 @@
+﻿
+///
+/// RadarSourceMessageTypes.proto defines the protocol buffers for each of the objects being sent and received from
+/// the components of the system. For us old-timers at Rutter, this is gRPC version of IDLTYPES.H
+///
+
+syntax = "proto3";
+package S6Protocol; //C++ namespace
+import "google/protobuf/empty.proto";
+
+// import "google/protobuf/Empty.proto";
+option java_package = "com.Adapter.RUTTER_GRPC";
+
+import "GrpcMessageTypes.proto";
+import "DataMessageTypes.proto";
+
+///
+/// Service definition for connections comming from SeaScan
+///
+service SeaScanService {
+	//Unary Calls
+	rpc ShakeHands(HandshakeMessage) returns (HandshakeResponse);
+	rpc DisconnectClient(DisconnectClientMessage) returns (DisconnectClientResponse);
+
+	//Host to Client Streams
+	rpc OpenPngImageStream(stream PngImageMessage) returns (google.protobuf.Empty);
+	rpc OpenAisStream(stream AisToSeaviewMessage) returns (google.protobuf.Empty);
+	
+	rpc OpenNormalTracksStream(stream EntityEventMessage) returns (google.protobuf.Empty);
+	rpc OpenOsdStream(stream OSDMessage) returns (google.protobuf.Empty);
+	
+	rpc OpenWamosStream(stream WamosToSeaViewContainerMessage) returns (google.protobuf.Empty);
+
+}

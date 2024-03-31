@@ -1,0 +1,86 @@
+﻿
+///
+/// RadarSourceMessageTypes.proto defines the protocol buffers for each of the objects being sent and received from
+/// the components of the system. For us old-timers at Rutter, this is gRPC version of IDLTYPES.H
+///
+
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+option java_package = "com.Adapter.RUTTER_GRPC";
+package S6Protocol; //C++ namespace
+
+
+
+
+message HandshakeMessage {
+	enum ClientApplicationType 
+	{ 
+		None = 0; 
+		Any = 1; 
+		RutterServer = 2; 
+		S6Node = 3; 
+		SeaView = 4;
+        S6MapTileProvider = 5;
+	}
+	ClientApplicationType ApplicationType = 1;
+	string ClientId = 2;
+	string ClientHostName = 3;
+}
+
+message HandshakeResponse {
+	string NodeId = 1;
+    bool AllowConnection = 2;
+}
+
+message DisconnectClientMessage {
+	enum ClientApplicationType 
+	{ 
+		None = 0; 
+		Any = 1; 
+		RutterServer = 2; 
+		S6Node = 3; 
+		SeaView = 4; 
+        S6MapTileProvider = 5;
+	}
+	ClientApplicationType ApplicationType = 1;
+	string ClientId = 2;
+	string ClientHostName = 3;
+}
+
+message DisconnectClientResponse {
+	string NodeId = 1;
+}
+
+
+message OpenImageStreamMessage
+{
+	int32 channelNumber = 1;
+    string clientId = 2;
+}
+
+
+message OpenCommandStreamMessage
+{
+   string clientId = 1;
+}
+
+
+message OpenEntityStreamMessage
+{
+   string clientId = 1;
+}
+
+
+
+message OpenWamosStreamMessage
+{
+   string clientId = 1;
+}
+
+message OpenAisStreamMessage
+{
+    string clientId = 1;
+}
